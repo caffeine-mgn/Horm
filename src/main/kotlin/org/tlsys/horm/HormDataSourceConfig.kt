@@ -17,7 +17,7 @@ class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) 
     override var mode = HibernateConfig.CreateMode.Update
     override var fetchSize: Int? = null
 
-    fun build() {
+    fun build(): Horm {
         if (dialect == null) {
             dataSource.use {
                 dialect = when (it.metaData!!.databaseProductName) {
@@ -63,5 +63,6 @@ class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) 
 
         val factory = configuration.buildSessionFactory(serviceRegistry)
         Thread.currentThread().contextClassLoader = old
+        return Horm(factory)
     }
 }
