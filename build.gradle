@@ -1,7 +1,10 @@
+import org.gradle.api.publish.maven.MavenPublication
+import org.gradle.api.tasks.bundling.Jar
+
 buildscript {
     ext.kotlin_version = "1.2.10"
-    ext.hibernate_version = '5.0.10.Final'
-    ext.junit_version='4.12'
+    ext.hibernate_version = '5.2.13.Final'
+    ext.junit_version = '4.12'
     repositories {
         mavenCentral()
         jcenter()
@@ -14,6 +17,29 @@ buildscript {
 }
 
 apply plugin: 'kotlin-platform-jvm'
+apply plugin: 'maven-publish'
+
+task sourcesJar(type: Jar) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId "org.tlsys"
+            artifactId 'horn'
+            version "1.0"
+            from components.java
+            artifact sourcesJar
+        }
+    }
+    repositories {
+        maven {
+            url "/var/repo"
+        }
+    }
+}
 
 
 repositories {
@@ -23,7 +49,7 @@ repositories {
 
 dependencies {
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
-    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.13.Final'
+    compile group: 'org.hibernate', name: 'hibernate-core', version: hibernate_version
     testCompile "junit:junit:$junit_version"
 }
 
@@ -38,17 +64,3 @@ compileKotlin {
         jvmTarget = "1.8"
     }
 }
-
-/*
-jar {
-    from {
-        (configurations.runtime - configurations.providedCompile).collect {
-            it.isDirectory() ? it : zipTree(it)
-        }
-    } {
-        exclude "META-INF/*.SF"
-        exclude "META-INF/*.DSA"
-        exclude "META-INF/*.RSA"
-    }
-}
-*/
