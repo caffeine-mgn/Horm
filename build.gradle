@@ -1,0 +1,54 @@
+buildscript {
+    ext.kotlin_version = "1.2.10"
+    ext.hibernate_version = '5.0.10.Final'
+    ext.junit_version='4.12'
+    repositories {
+        mavenCentral()
+        jcenter()
+        mavenLocal()
+    }
+
+    dependencies {
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
+}
+
+apply plugin: 'kotlin-platform-jvm'
+
+
+repositories {
+    mavenCentral()
+    mavenLocal()
+}
+
+dependencies {
+    compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile group: 'org.hibernate', name: 'hibernate-core', version: '5.2.13.Final'
+    testCompile "junit:junit:$junit_version"
+}
+
+kotlin {
+    experimental {
+        coroutines 'enable'
+    }
+}
+
+compileKotlin {
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+}
+
+/*
+jar {
+    from {
+        (configurations.runtime - configurations.providedCompile).collect {
+            it.isDirectory() ? it : zipTree(it)
+        }
+    } {
+        exclude "META-INF/*.SF"
+        exclude "META-INF/*.DSA"
+        exclude "META-INF/*.RSA"
+    }
+}
+*/
