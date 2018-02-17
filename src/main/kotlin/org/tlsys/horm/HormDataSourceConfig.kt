@@ -30,6 +30,9 @@ class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) 
         }
 
         val configuration = Configuration()
+        for (c in classes) {
+            configuration.addAnnotatedClass(c)
+        }
         configuration.setProperty("hibernate.dialect", dialect)
         configuration.setProperty("hibernate.current_session_context_class", "thread")
         configuration.setProperty("hibernate.show_sql", showSQL.toString())
