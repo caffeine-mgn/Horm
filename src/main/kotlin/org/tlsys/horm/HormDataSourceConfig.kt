@@ -17,6 +17,10 @@ class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) 
     override var mode = HibernateConfig.CreateMode.Update
     override var fetchSize: Int? = null
 
+    init {
+        f(this)
+    }
+
     fun build(): Horm {
         if (dialect == null) {
             dataSource.use {

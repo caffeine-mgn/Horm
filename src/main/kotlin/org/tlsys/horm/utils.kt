@@ -1,6 +1,8 @@
 package org.tlsys.horm
 
+import org.hibernate.query.Query
 import java.sql.Connection
+import javax.persistence.NoResultException
 import javax.sql.DataSource
 
 internal fun <V> DataSource.use(f: (Connection) -> V): V {
@@ -13,3 +15,10 @@ internal fun <V> DataSource.use(f: (Connection) -> V): V {
             connect.close()
     }
 }
+
+val <T>Query<T>.singleResultOrNull: T?
+    get() = try {
+        singleResult
+    } catch (e: NoResultException) {
+        null
+    }
