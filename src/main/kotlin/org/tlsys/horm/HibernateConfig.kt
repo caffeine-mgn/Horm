@@ -7,11 +7,12 @@ interface HibernateConfig {
     var mode: CreateMode
     var fetchSize: Int?
     var classLoader: ClassLoader?
-    var showSQL:Boolean
-    var xmlConfig:String?
+    var showSQL: Boolean
+    var xmlConfig: String?
 
 
     enum class CreateMode(val property: String) {
+        None("none"),
         Validate("validate"),
         Update("update"),
         Create("create"),
