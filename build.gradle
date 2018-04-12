@@ -18,6 +18,12 @@ buildscript {
 
 apply plugin: 'kotlin-platform-jvm'
 apply plugin: 'maven-publish'
+apply plugin: "jacoco"
+
+jacoco {
+    toolVersion = "0.8.0"
+//    reportsDir = file("$buildDir/customJacocoReportDir")
+}
 
 task sourcesJar(type: Jar) {
     classifier = 'sources'
