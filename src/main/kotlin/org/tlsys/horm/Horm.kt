@@ -38,7 +38,7 @@ class Horm(val factory: SessionFactory) : Closeable {
             try {
                 return f(cur.get()!!)
             } catch (e: Throwable) {
-                factory.currentSession.transaction.markRollbackOnly()
+                cur.get()!!.transaction.markRollbackOnly()
                 throw e
             }
         } else {
@@ -65,7 +65,12 @@ class Horm(val factory: SessionFactory) : Closeable {
 
     fun <T> su(f: (Session) -> T): T {
         if (cur.get() !== null && cur.get()!!.transaction.status == TransactionStatus.ACTIVE) {
-            return f(cur.get()!!)
+            try {
+                return f(cur.get()!!)
+            } catch (e: Throwable) {
+                cur.get()!!.transaction.markRollbackOnly()
+                throw e
+            }
         } else {
             val session = factory.openSession()
             val oldSession = cur.get()
