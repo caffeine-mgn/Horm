@@ -88,6 +88,16 @@ class RETest {
         ds.sizeOf("test").eq(1)
     }
 
+    @Test
+    fun `Отмена транзакции`() {
+        db.re {
+            it.persist(TestClass("OLOLO"))
+            it.flush()
+            it.transaction.markRollbackOnly()
+        }
+        ds.sizeOf("test").eq(0)
+    }
+
 
     @Test
     fun `Rollback при вложенной функции`() {

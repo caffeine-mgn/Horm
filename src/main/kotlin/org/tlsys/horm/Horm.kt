@@ -48,7 +48,10 @@ class Horm(val factory: SessionFactory) : Closeable {
             try {
                 session.beginTransaction()
                 val r = f(session)
-                session.transaction.commit()
+                if (session.transaction.status == TransactionStatus.MARKED_ROLLBACK)
+                    session.transaction.rollback()
+                else
+                    session.transaction.commit()
                 return r
             } catch (e: Throwable) {
                 session.transaction.rollback()
