@@ -35,7 +35,7 @@ publishing {
         maven(MavenPublication) {
             groupId "org.tlsys"
             artifactId 'horm'
-            version "1.1.1"
+            version "1.1.2"
             from components.java
             artifact sourcesJar
         }
