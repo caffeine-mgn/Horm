@@ -22,7 +22,6 @@ apply plugin: "jacoco"
 
 jacoco {
     toolVersion = "0.8.0"
-//    reportsDir = file("$buildDir/customJacocoReportDir")
 }
 
 task sourcesJar(type: Jar) {
