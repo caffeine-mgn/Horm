@@ -1,5 +1,7 @@
 package org.tlsys.horm
 
+import org.hibernate.boot.model.naming.ImplicitNamingStrategy
+import org.hibernate.boot.model.naming.PhysicalNamingStrategy
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder
 import org.hibernate.cfg.Configuration
 import org.hibernate.cfg.Environment
@@ -8,6 +10,9 @@ import java.sql.Connection
 import javax.sql.DataSource
 
 class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) -> Unit) : HibernateConfig {
+    override var catalog: String? = null
+    override var implicitNamingStrategy: ImplicitNamingStrategy? = null
+    override var physicalNamingStrategy: PhysicalNamingStrategy? = null
     override var xmlConfig: String? = null
     override var showSQL: Boolean = false
     override var classLoader: ClassLoader? = null
@@ -42,10 +47,18 @@ class HormDataSourceConfig(val dataSource: DataSource, val f: (HibernateConfig) 
         configuration.setProperty("hibernate.show_sql", showSQL.toString())
         configuration.setProperty("hibernate.hbm2ddl.auto", mode.property)
         configuration.setProperty("hibernate.connection.autocommit", "false")
+        configuration.setProperty("hibernate.hbm2ddl.jdbc_metadata_extraction_strategy", "individually")
+
+        if (physicalNamingStrategy != null)
+            configuration.setPhysicalNamingStrategy(physicalNamingStrategy)
+        if (implicitNamingStrategy != null)
+            configuration.setImplicitNamingStrategy(implicitNamingStrategy)
 
         if (schema != null) {
-            configuration.setProperty("hibernate.default_schema", "`${schema}`")
+            configuration.setProperty(Environment.DEFAULT_SCHEMA, "`${schema}`")
         }
+        if (catalog != null)
+            configuration.setProperty(Environment.DEFAULT_CATALOG, "`${catalog}`")
 
         if (fetchSize !== null)
             configuration.setProperty(Environment.STATEMENT_FETCH_SIZE, "${fetchSize}")
